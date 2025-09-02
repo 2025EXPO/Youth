@@ -1,0 +1,164 @@
+.photo-shoot-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 카메라 화면 영역 */
+.camera-screen {
+  position: absolute;
+  left: 40%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  height: 60vh;
+  background-color: #d9d9d9;
+  border-radius: 8px;
+  overflow: hidden; 
+}
+
+.camera-screen video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+}
+
+/* 촬영 횟수 영역 */
+.photo-count {
+  position: absolute;
+  right: 10vw;
+  top: 15vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.count-label {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 100;
+  font-size: 1.8vw;
+  color: #000000;
+  margin-bottom: 1.5vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.count-number {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 5vw; /* 기존 4vw에서 크기 증가 */
+  font-weight: 700; /* 기존 100에서 굵게(bold) 변경 */
+  color: #000000;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 구분선 */
+.divider {
+  position: absolute;
+  right: 10vw;
+  top: 50vh;
+  width: 8vw;
+  height: 2px;
+  background-color: #000000;
+}
+
+/* 남은 시간 영역 (다시 보이도록 복구) */
+.time-remaining {
+  position: absolute;
+  right: 10vw;
+  top: 65vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-label {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 100;
+  font-size: 1.8vw;
+  color: #000000;
+  margin-bottom: 1.5vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.countdown-number {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 5vw; /* 기존 4vw에서 크기 증가 */
+  font-weight: 700; /* 기존 100에서 굵게(bold) 변경 */
+  color: #000000;
+  text-align: center;
+  transition: color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.countdown-number.red {
+  color: #ff0000;
+  font-weight: 700; /* 굵은 상태 유지 */
+}
+
+/* 촬영 피드백 오버레이 */
+.shooting-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: flash 0.5s ease-out;
+}
+
+.shooting-effect {
+  font-size: 10vw;
+  animation: cameraShutter 0.5s ease-out;
+}
+
+@keyframes flash {
+  0% { background-color: rgba(255, 255, 255, 0); }
+  50% { background-color: rgba(255, 255, 255, 0.9); }
+  100% { background-color: rgba(255, 255, 255, 0); }
+}
+
+@keyframes cameraShutter {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 완료 메시지 */
+.complete-message {
+  font-family: 'Noto Sans', 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  font-size: 4vw;
+  color: #000000;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 터치스크린 최적화 */
+.photo-shoot-container * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}

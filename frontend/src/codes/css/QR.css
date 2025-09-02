@@ -1,0 +1,305 @@
+/* QR 페이지 컨테이너 */
+.qr-container {
+  width: 100%;
+  min-height: 100vh;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-family: 'Noto Sans', 'Noto Sans Thin', sans-serif;
+  font-weight: 100;
+}
+
+/* 제목 스타일 */
+.qr-title {
+  font-size: 48px;
+  font-family: 'Noto Sans', 'Noto Sans Thin', sans-serif;
+  font-weight: 100;
+  color: #333;
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+/* 메인 콘텐츠 */
+.qr-main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+  padding: 0 40px;
+}
+
+/* QR 코드 섹션 */
+.qr-code-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+/* QR 코드 컨테이너 */
+.qr-code-container {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* QR 코드 이미지 */
+.qr-code-image {
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
+}
+
+/* QR 코드 안내 텍스트 */
+.qr-instruction {
+  text-align: center;
+  color: #333;
+}
+
+.qr-instruction p {
+  font-size: 24px;
+  margin: 8px 0;
+  font-family: 'Noto Sans', 'Noto Sans Thin', sans-serif;
+  font-weight: 100;
+}
+
+/* 카운트다운 스타일 */
+.qr-countdown {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.qr-countdown-number {
+  font-size: 48px;
+  font-family: 'Noto Sans', 'Noto Sans Thin', sans-serif;
+  font-weight: 100;
+  color: #333;
+}
+
+/* 안내 정보 섹션 */
+.qr-info-section {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 30px 40px;
+  border: 1px solid #e9ecef;
+}
+
+/* 안내 정보 텍스트 */
+.qr-info-text p {
+  color: #333;
+  font-size: 18px;
+  margin: 15px 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* BACK 버튼 컨테이너 */
+.qr-back-button-container {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+}
+
+/* BACK 버튼 */
+.qr-back-button {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  padding: 15px 25px;
+  background: #f8f9fa;
+  border-radius: 50px;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.qr-back-button:hover {
+  background: #e9ecef;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* BACK 버튼 테두리 */
+.qr-back-button-border {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #333;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* BACK 텍스트 */
+.qr-back-text {
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* BACK 화살표 */
+.qr-back-arrow {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-back-arrow img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .qr-title {
+    font-size: 42px;
+    margin-top: 60px;
+    margin-bottom: 50px;
+  }
+  
+  .qr-main-content {
+    gap: 60px;
+    padding: 0 30px;
+  }
+  
+  .qr-code-image {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .qr-instruction p {
+    font-size: 22px;
+  }
+  
+  .qr-info-text p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .qr-title {
+    font-size: 36px;
+    margin-top: 50px;
+    margin-bottom: 40px;
+  }
+  
+  .qr-main-content {
+    gap: 50px;
+    padding: 0 20px;
+  }
+  
+  .qr-code-container {
+    padding: 30px;
+  }
+  
+  .qr-code-image {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .qr-instruction p {
+    font-size: 20px;
+  }
+  
+  .qr-info-section {
+    padding: 25px 30px;
+  }
+  
+  .qr-info-text p {
+    font-size: 15px;
+    margin: 12px 0;
+  }
+  
+  .qr-back-button-container {
+    bottom: 30px;
+    left: 30px;
+  }
+  
+  .qr-back-button {
+    padding: 12px 20px;
+    gap: 12px;
+  }
+  
+  .qr-back-button-border {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .qr-back-text {
+    font-size: 16px;
+  }
+  
+  .qr-back-arrow {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .qr-title {
+    font-size: 30px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+  
+  .qr-main-content {
+    gap: 40px;
+    padding: 0 15px;
+  }
+  
+  .qr-code-container {
+    padding: 25px;
+  }
+  
+  .qr-code-image {
+    width: 220px;
+    height: 220px;
+  }
+  
+  .qr-instruction p {
+    font-size: 18px;
+  }
+  
+  .qr-info-section {
+    padding: 20px 25px;
+  }
+  
+  .qr-info-text p {
+    font-size: 14px;
+    margin: 10px 0;
+  }
+  
+  .qr-back-button-container {
+    bottom: 25px;
+    left: 25px;
+  }
+  
+  .qr-back-button {
+    padding: 10px 18px;
+    gap: 10px;
+  }
+  
+  .qr-back-button-border {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .qr-back-text {
+    font-size: 15px;
+  }
+  
+  .qr-back-arrow {
+    width: 16px;
+    height: 16px;
+  }
+}

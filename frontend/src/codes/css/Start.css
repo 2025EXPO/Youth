@@ -1,0 +1,116 @@
+/* Start.css - 사진 촬영 시작 화면 */
+
+.start-container {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  font-family: 'Rationale', sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* START! 텍스트 */
+.start-text {
+  font-size: 200px;
+  font-weight: 400;
+  color: #101010;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1;
+  margin-bottom: 30px;
+  user-select: none;
+  animation: fadeInScale 1.2s ease-out;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  60% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 카운트다운 텍스트 */
+.countdown-text {
+  font-size: 96px;
+  font-weight: 400;
+  color: #101010;
+  text-align: center;
+  white-space: nowrap;
+  line-height: 1;
+  user-select: none;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.2s ease-out;
+}
+
+.countdown-text.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.countdown-text.complete {
+  color: #ff0000;
+  animation: completePulse 0.8s ease-in-out;
+  text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+@keyframes completePulse {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.15);
+    text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+  }
+}
+
+/* 터치스크린 최적화 */
+@media (max-width: 1024px) {
+  .start-text {
+    font-size: 150px;
+  }
+  
+  .countdown-text {
+    font-size: 72px;
+  }
+}
+
+@media (max-width: 768px) {
+  .start-text {
+    font-size: 120px;
+  }
+  
+  .countdown-text {
+    font-size: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .start-text {
+    font-size: 100px;
+  }
+  
+  .countdown-text {
+    font-size: 48px;
+  }
+}
+
