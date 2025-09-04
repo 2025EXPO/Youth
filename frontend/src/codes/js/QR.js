@@ -1,9 +1,9 @@
 // 최종 QR코드 화면 (s3버킷을이용해 qr생성)
 import React from 'react';
 import '../css/QR.css';
-import QRCode from "../../img/QR_Sample.svg";
+import {QRCodeCanvas} from "qrcode.react";
 
-const QR = ({ onComplete }) => {
+const QR = ({ finalUrl, onComplete }) => {
   const [countdown, setCountdown] = React.useState(30);
 
   React.useEffect(() => {
@@ -36,7 +36,11 @@ const QR = ({ onComplete }) => {
         {/* QR 코드 섹션 */}
         <div className="qr-code-section">
           <div className="qr-code-container">
-            <img src={QRCode} alt="QR Code" className="qr-code-image" />
+            {finalUrl ? (
+                <QRCodeCanvas value={finalUrl} size={240} includeMargin />
+            ) : (
+                <p>생성된 사진이 없습니다.</p>
+            )}
           </div>
           <div className="qr-instruction">
             <p>스마트폰으로 QR코드를 스캔하여</p>

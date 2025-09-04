@@ -15,6 +15,9 @@ function App() {
   const [selectedPhotos, setSelectedPhotos] = useState([]);
   // 사용자가 선택한 프레임 옵션을 저장할 새로운 state를 추가합니다.
   const [frameOptions, setFrameOptions] = useState(null);
+  //0905 수정==========================================================
+  const [finalUrl, setFinalUrl] = useState(null);
+  // ===============================================================
 
   useEffect(() => {
     console.log(`App.js:20 페이지 변경: ${page}`);
@@ -57,14 +60,20 @@ function App() {
           selectedPhotos={selectedPhotos}
           onComplete={(options) => {
             console.log('App.js: FrameSelect 완료, 선택된 옵션:', options);
+            //0905 수정==========================================================
+            setFinalUrl(options.finalUrl); //QR URL 저장
+            // ===============================================================
             setFrameOptions(options); // 선택된 옵션을 state에 저장
             setPage('qr'); // 마지막 'qr' 페이지로 이동
           }}
+
           onBack={() => setPage('photoSelect')}
         />;
       case 'qr':
         // 최종 QR 페이지를 렌더링합니다. (다음 단계에서 구현)
-        return <QR />;
+        //0905 수정==========================================================
+        return <QR finalUrl={finalUrl} onComplete={() => setPage('main')} />;
+        // ===============================================================
       default:
         return <MainNoon onStartClick={() => setPage('numSelect')} />;
     }

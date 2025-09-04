@@ -59,7 +59,32 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
   };
 
   const handleBack = () => { if (onBack) onBack(); };
-  const handleNext = () => { if (onComplete) { onComplete({ selectedFrame, selectedLogo, selectedPhotoColor, selectedSpecialFrame }); } };
+  // 0905 수정===================================================================
+  const handleNext = async () => {
+    try {
+      const res = await fetch("http://192.168.200.144:5000/final", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          photos: selectedPhotos, // 4장 선택된 거
+          grayscale: selectedPhotoColor === "color2", // 흑백 옵션
+          frameKey: selectedFrame,
+          logoKey: selectedLogo,
+          specialFrameKey: selectedSpecialFrame
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "최종본 생성 실패");
+
+      // 최종 URL을 상위(App.js)로 전달
+      onComplete && onComplete({ finalUrl: data.url });
+    } catch (error) {
+      console.error("최종 합성 요청 오류:", error);
+      alert("최종 이미지 생성에 실패했습니다.");
+    }
+  };
+  // ========================================================================================
 
   return (
     <div className="frameselect-container">
