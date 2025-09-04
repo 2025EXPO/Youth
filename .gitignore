@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 # Python 가상환경
 venv/
+__pycache__/
 
 # React 모듈
 node_modules/

@@ -10,22 +10,29 @@
     cd frontend
     yarn install
     ```
-3.  backend 세팅 (FastAPI + 가상환경)
+3.  backend 세팅 (Flask + 가상환경)
     ```py
     cd backend
     python -m venv venv # 가상환경 생성
-    .\venv\Scripts\Activate.ps1 # 가상환경 실행 (PowerShell 기준)
-    pip install -r requirements.txt # <- 요구사항 파일이 있을 경우
+    source venv/Scripts/activate # 가상환경 실행 (bash 기준)
+    pip install flask
     ```
-4.  FastAPI 서버 실행
+    ```py
+    rest api 필요하면 깔기 (현재 안했음) 
+    pip install flask-cors
+    ```       
 
-        ```py
-        python -m uvicorn main:app --reload
+4.  서버 실행
+    ```py
+    python app.py
+    ```
+- 접속 주소: http://127.0.0.1:5000
 
-        ```
-
-    - 접속 주소: http://localhost:8000
 
 ## python 가상환경 실행 명령어
+1. 활성화 
+    ```source venv/Scripts/activate```
+2. 앞에 (venv)붙으면 성공 ```(venv) dayoun@DESKTOP-XXXX MINGW64 ~/Youth/backend```
+3. 비활성화 
+```deactivate```
 
-1. ven/Scripts/active
