@@ -85,7 +85,7 @@ const PhotoShoot = ({ onComplete }) => {
         }
         return prev - 1;
       });
-    }, 500);
+    }, 100);
 
     return () => {
       if (timerIdRef.current) clearInterval(timerIdRef.current);

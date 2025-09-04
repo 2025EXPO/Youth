@@ -62,7 +62,7 @@
   width: 350px;
   height: 550px;
   object-fit: contain;
-  z-index: 1;
+  z-index: 10; /*프레임이 사진보다 위로 올라와야함*/
 }
 
 .frameselect-frame-slots {

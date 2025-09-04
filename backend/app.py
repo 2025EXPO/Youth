@@ -9,7 +9,7 @@ from PIL import Image, ImageOps
 
 # Flask 앱을 생성합니다.
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000"]}})
 
 # 현재 파일(app.py)이 있는 폴더의 절대 경로를 가져옵니다.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -54,17 +54,22 @@ def _open_url(url):
 
 # 1열 4컷 (2*6/ 600x1800) 생성
 def make_4cut(photo_urls, frame_path=None, grayscale=False):
-    W, H, M = 600, 1800, 20 # 사이즈: 2x6, 여백 20px
-    cell_w = W - M*2 # 한 칸의 가로
-    cell_h = (H - M*5) // 4 # 한 칸의 세로(4장 배치)
+    if not frame_path or not os.path.exists(frame_path):
+        raise ValueError("Frame not found")
+
+    frame_rgba = Image.open(frame_path).convert("RGBA")
+    W, H = frame_rgba.size
     canvas = Image.new("RGBA", (W, H), "white")
 
-    # URL → PIL.Image 변환
+    # 사진 불러오기
     imgs = [_open_url(u) for u in photo_urls]
     if grayscale:
         imgs = [ImageOps.grayscale(im).convert("RGB") for im in imgs]
 
-    # 4칸 위치계산
+    # 슬롯 계산
+    M = 40
+    cell_w = W - M * 2
+    cell_h = (H - M * 5) // 4
     positions = [
         (M, M),
         (M, M*2 + cell_h),
@@ -72,18 +77,16 @@ def make_4cut(photo_urls, frame_path=None, grayscale=False):
         (M, M*4 + cell_h*3)
     ]
 
-    # 사진 리사이징 후 합성
+    # 사진 붙이기
     for im, (x, y) in zip(imgs, positions):
         resized = ImageOps.fit(im, (cell_w, cell_h))
-        canvas.paste(resized, (x, y))
+        canvas.paste(resized.convert("RGBA"), (x, y))
 
-    # 프레임 PNG 합성
-    if frame_path and os.path.exists(frame_path):
-        frame = Image.open(frame_path).convert("RGBA").resize((W, H))
-        combined = Image.alpha_composite(canvas.convert("RGBA"), frame)
-        return combined.convert("RGB")
-
+    # 프레임 덮어쓰기
+    combined = Image.alpha_composite(canvas, frame_rgba)
+    return combined.convert("RGB")
     return canvas
+
 
 # 프린트용 네컷 2개를 좌우로 배치해서 합치기
 def make_print(strip: Image.Image):
@@ -112,7 +115,12 @@ def make_final():
         return jsonify({"message": "사진 4장이 필요합니다."}), 400
 
     # 1. 2*6/ 600x1800 1열 4컷 만들기
+    print(">>> 요청 frame_key:", frame_key)
     frame_path = FRAME_MAP.get(frame_key)
+    print(">>> frame_path:", frame_path)
+    if not frame_path or not os.path.exists(frame_path):
+        return jsonify({"message": f"프레임 경로 없음: {frame_key} → {frame_path}"}), 400
+
     strip = make_4cut(photos, frame_path, grayscale)
 
     # 2. 저장하기

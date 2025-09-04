@@ -65,10 +65,11 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
       const res = await fetch("http://192.168.200.144:5000/final", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        mode: "cors",
         body: JSON.stringify({
           photos: selectedPhotos, // 4장 선택된 거
           grayscale: selectedPhotoColor === "color2", // 흑백 옵션
-          frameKey: selectedFrame,
+          frameKey: selectedSpecialFrame || selectedFrame,
           logoKey: selectedLogo,
           specialFrameKey: selectedSpecialFrame
         }),
