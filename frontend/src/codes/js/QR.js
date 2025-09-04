@@ -1,3 +1,4 @@
+// 최종 QR코드 화면 (s3버킷을이용해 qr생성)
 import React from 'react';
 import '../css/QR.css';
 import QRCode from "../../img/QR_Sample.svg";

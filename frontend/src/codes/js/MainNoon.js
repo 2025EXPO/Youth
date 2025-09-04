@@ -1,3 +1,4 @@
+// 첫 화면 (Touch to Start)
 import React, { useState, useEffect } from 'react';
 import '../css/MainNoon.css';
 import youthLogo from '../../img/Union.png';

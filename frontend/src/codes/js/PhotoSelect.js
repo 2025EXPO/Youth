@@ -1,3 +1,5 @@
+// 촬영한 사진 중 원하는 4장 선택
+
 import React, { useState } from 'react';
 import '../css/PhotoSelect.css';
 import NextArrow from '../../img/NextArrow.png'; // NumSelect에서 사용하던 이미지 재활용

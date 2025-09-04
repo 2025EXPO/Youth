@@ -1,3 +1,5 @@
+// 실제 웹캠 촬영 + Flask 백엔드 전송
+//flask app.py에서 /uploads로 받아 이미지 저장 및 가공
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import '../css/PhotoShoot.css';
 

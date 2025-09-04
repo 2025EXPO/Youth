@@ -1,3 +1,4 @@
+// 프레임 + 로고 + 흑백/컬러 선택
 import React, { useState, useEffect } from 'react';
 import '../css/FrameSelect.css';
 import WhiteRoundFrame from '../../img/frames/WhiteRound.png';

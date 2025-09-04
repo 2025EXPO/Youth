@@ -1,3 +1,4 @@
+// 시작 시 카운트다운
 import React, { useState, useEffect } from 'react';
 import '../css/Start.css';
 

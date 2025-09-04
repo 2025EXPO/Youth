@@ -1,3 +1,4 @@
+// 찍을 사진 개수 선택
 import React, { useState, useEffect } from 'react';
 import '../css/NumSelect.css';
 import NextArrow from "../../img/NextArrow.png";
