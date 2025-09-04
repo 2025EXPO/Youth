@@ -57,6 +57,7 @@ def make_4cut(photo_urls, frame_path=None, grayscale=False):
     if not frame_path or not os.path.exists(frame_path):
         raise ValueError("Frame not found")
 
+    # 프레임/캔버스
     frame_rgba = Image.open(frame_path).convert("RGBA")
     W, H = frame_rgba.size
     canvas = Image.new("RGBA", (W, H), "white")
@@ -66,26 +67,47 @@ def make_4cut(photo_urls, frame_path=None, grayscale=False):
     if grayscale:
         imgs = [ImageOps.grayscale(im).convert("RGB") for im in imgs]
 
-    # 슬롯 계산
-    M = 40
-    cell_w = W - M * 2
-    cell_h = (H - M * 5) // 4
+    # === 슬롯(녹색 네모) 레이아웃 ===
     positions = [
-        (M, M),
-        (M, M*2 + cell_h),
-        (M, M*3 + cell_h*2),
-        (M, M*4 + cell_h*3)
+        (23,29),
+        (23,393),
+        (23,756),
+        (23,1121),
     ]
 
-    # 사진 붙이기
-    for im, (x, y) in zip(imgs, positions):
-        resized = ImageOps.fit(im, (cell_w, cell_h))
-        canvas.paste(resized.convert("RGBA"), (x, y))
+    # 슬롯의 '보이는 영역' 비율을 16:10으로 강제
+    SLOT_AR = 16 / 10
 
-    # 프레임 덮어쓰기
+    # Pillow 10 대응: 리샘플러
+    try:
+        RESAMPLE = Image.Resampling.LANCZOS
+    except AttributeError:
+        RESAMPLE = Image.LANCZOS
+
+    # 각 슬롯에 맞춰 'object-fit: cover' 처럼 중앙 크롭 + 리사이즈
+    for im, (slot_x, slot_y) in zip(imgs, positions):
+        # 우선 슬롯 크기(cell_w, cell_h) 안에서 16:10을 최대한 크게 맞춤
+        # 1) 가로를 기준으로 맞춰본다
+        target_w = cell_w
+        target_h = int(round(target_w / SLOT_AR))
+        # 2) 세로가 슬롯을 넘치면 세로 기준으로 다시 계산
+        if target_h > cell_h:
+            target_h = cell_h
+            target_w = int(round(target_h * SLOT_AR))
+
+        # 중앙 크롭 + 리사이즈
+        fitted = ImageOps.fit(im, (target_w, target_h), method=RESAMPLE, centering=(0.5, 0.5))
+        fitted = fitted.convert("RGBA")
+
+        # 슬롯 안에서 중앙 정렬(슬롯이 더 클 수 있으니까 여백 보정)
+        paste_x = slot_x + (cell_w - target_w) // 2
+        paste_y = slot_y + (cell_h - target_h) // 2
+
+        canvas.paste(fitted, (paste_x, paste_y), fitted)
+
+    # 프레임을 맨 위에 덮기 (프레임의 투명영역으로 사진이 보임)
     combined = Image.alpha_composite(canvas, frame_rgba)
     return combined.convert("RGB")
-    return canvas
 
 
 # 프린트용 네컷 2개를 좌우로 배치해서 합치기

@@ -12,13 +12,15 @@ const PhotoShoot = ({ onComplete }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const timerIdRef = useRef(null);
+  // 16:10 = 1.6
+  const SLOT_AR = 16 / 10;
 
   // 웹캠 설정
   useEffect(() => {
     const getCameraStream = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-          video: { width: 640, height: 480 } 
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { aspectRatio: SLOT_AR, width: { ideal: 1280 }, height: { ideal: 800 }, }
         });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
@@ -43,11 +45,48 @@ const PhotoShoot = ({ onComplete }) => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      const context = canvas.getContext('2d');
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageData = canvas.toDataURL('image/jpeg');
+
+// 최종 내보낼 크기(16:10). 슬롯이랑 맞추기
+      const OUT_W = 1600;   // 원하면 1280, 960 등으로 줄여도 됨
+      const OUT_H = 1000;   // 16:10 유지
+      canvas.width  = OUT_W;
+      canvas.height = OUT_H;
+
+      const ctx = canvas.getContext('2d');
+
+      // 소스(비디오)와 타겟(슬롯)의 종횡비 계산
+      const SLOT_AR = 16 / 10;
+      const vw = video.videoWidth;
+      const vh = video.videoHeight;
+      const videoAR = vw / vh;
+
+      // 중앙 크롭용 소스 사각형 계산 (object-fit: cover)
+      let sx, sy, sw, sh;
+      if (videoAR > SLOT_AR) {
+        // 비디오가 더 가로로 넓음 → 가로를 잘라냄
+        sh = vh;
+        sw = Math.round(vh * SLOT_AR);
+        sx = Math.round((vw - sw) / 2);
+        sy = 0;
+      } else {
+        // 비디오가 더 세로로 큼 → 세로를 잘라냄
+        sw = vw;
+        sh = Math.round(vw / SLOT_AR);
+        sx = 0;
+        sy = Math.round((vh - sh) / 2);
+      }
+
+      // 잘라서 16:10 캔버스에 정확히 채우기
+      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, OUT_W, OUT_H);
+
+      const imageData = canvas.toDataURL("image/jpeg", 0.92);
+
+
+      // const context = canvas.getContext('2d');
+      // context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      //
+      // const imageData = canvas.toDataURL('image/jpeg');
+
       try {
         console.log(`${photoCount + 1}번째 사진을 백엔드로 전송합니다.`);
         const response = await fetch('http://127.0.0.1:5000/capture', {
