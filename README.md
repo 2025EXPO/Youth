@@ -30,6 +30,7 @@ aws 계정 권한 오류로 s3사용을 못하고 있음
 4.  서버 실행
     ```py
     python app.py
+    flask run --host=0.0.0.0 --port=5000 --debug
     ```
 - 접속 주소: http://127.0.0.1:5000
 
