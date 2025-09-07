@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import '../css/PhotoShoot.css';
 
 const PhotoShoot = ({ onComplete }) => {
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(10); //카운트다운 숫자
   const [photoCount, setPhotoCount] = useState(0);
   const [isShooting, setIsShooting] = useState(false);
   const [capturedPhotoUrls, setCapturedPhotoUrls] = useState([]);
@@ -116,7 +116,7 @@ const PhotoShoot = ({ onComplete }) => {
         if (prev <= 1) {
           clearInterval(timerIdRef.current);
           setIsShooting(true);
-          setTimeout(() => setIsShooting(false), 500);
+          setTimeout(() => setIsShooting(false), 500); //1000ms = 1초
           capturePhotoAndSend();
           setPhotoCount(count => count + 1);
           return 1;//시간 조절하기

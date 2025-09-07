@@ -9,13 +9,12 @@ from PIL import Image, ImageOps
 
 # Flask 앱을 생성합니다.
 app = Flask(__name__)
-# 개발용: 모든 출처 허용 (나중에 S3 배포 시 화이트리스트로 좁히세요)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# 현재 파일(app.py)이 있는 폴더의 절대 경로를 가져옵니다.
+# 현재 파일(app.py)이 있는 폴더의 절대 경로
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 사진을 저장할 폴더를 절대 경로로 지정합니다.
+# 사진을 저장할 폴더를 절대 경로
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -23,7 +22,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 FINALS_FOLDER = os.path.join(UPLOAD_FOLDER, 'finals')
 os.makedirs(FINALS_FOLDER, exist_ok=True)
 
-# 프레임 PNG 매핑 (경로는 실제 파일 위치에 맞춰 두세요)
+# 프레임 PNG 매핑
 FRAME_MAP = {
     # Round 타입
     "frame1": os.path.join(BASE_DIR, "templates", "frames", "WhiteRound.png"),
@@ -32,14 +31,14 @@ FRAME_MAP = {
     "frame4": os.path.join(BASE_DIR, "templates", "frames", "ZebraRound.png"),
     "frame5": os.path.join(BASE_DIR, "templates", "frames", "Shingu.png"),
 
-    # Text 타입 (필요하면 사용)
+    # Text 타입
     "frame6": os.path.join(BASE_DIR, "templates", "frames", "WhiteText.png"),
     "frame7": os.path.join(BASE_DIR, "templates", "frames", "BlackText.png"),
     "frame8": os.path.join(BASE_DIR, "templates", "frames", "PartyText.png"),
     "frame9": os.path.join(BASE_DIR, "templates", "frames", "ZebraText.png"),
     "frame10": os.path.join(BASE_DIR, "templates", "frames", "Shingu.png"),
 
-    # Special 타입 (필요하면 사용)
+    # Special
     "special1": os.path.join(BASE_DIR, "templates", "frames", "StarRound.png"),
     "special2": os.path.join(BASE_DIR, "templates", "frames", "OceanRound.png"),
     "special3": os.path.join(BASE_DIR, "templates", "frames", "ShinguFunny.png"),
@@ -167,7 +166,6 @@ def capture():
 @cross_origin(origins="*")
 def make_final():
     if request.method == "OPTIONS":
-        # 프리플라이트 빠른 승인
         return ("", 200)
 
     # 사진 4장 + 옵션

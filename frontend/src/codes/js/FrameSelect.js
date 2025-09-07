@@ -95,12 +95,6 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
           <div className="frameselect-frame-container">
             <img src={currentFrameImage} alt="Frame" className="frameselect-frame-image" />
             <div className="frameselect-frame-slots">
-              {/* 
-                ==================== 바로 이 부분들을 수정했습니다! ====================
-                selectedPhotoColor 상태가 'color2'(흑백)일 때 'grayscale' 클래스를 추가합니다.
-                4개의 사진 슬롯 모두 동일하게 수정했습니다.
-                ======================================================================
-              */}
               <div className="frameselect-frame-row">
                 <div className="frameselect-frame-slot">
                   {selectedPhotos && selectedPhotos[0] ? (<div className="frameselect-selected-photo"><img src={selectedPhotos[0]} alt="선택된 사진 1" className={selectedPhotoColor === 'color2' ? 'grayscale' : ''} /></div>) : (<div className="frameselect-empty-slot"><span>사진 1</span></div>)}
