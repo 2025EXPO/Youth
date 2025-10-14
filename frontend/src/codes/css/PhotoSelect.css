@@ -16,7 +16,7 @@
 /* 제목 스타일 */
 .title {
   position: absolute;
-  top: 56px;
+  top: 35px; /* 40px에서 35px로 5px 더 위로 조정 */
   left: 50%;
   transform: translateX(-50%);
   font-family: 'Noto Sans', 'Noto Sans KR', sans-serif;
@@ -104,10 +104,7 @@
   flex-shrink: 0;
 }
 
-.photoselect-frame-slot:hover {
-  transform: scale(1.02);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-}
+/* 터치스크린용으로 호버 효과 제거 */
 
 .empty-slot {
   display: flex;
@@ -135,6 +132,17 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* 선택된 사진 터치 피드백 */
+.selected-photo.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selected-photo.clickable:active {
+  transform: scale(0.95);
+  opacity: 0.8;
 }
 
 .photoselect-photo-placeholder {
@@ -173,10 +181,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.photoselect-photo-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
+/* 터치스크린용으로 호버 효과 제거 */
 
 .photoselect-photo-item:active {
   transform: scale(0.98);
@@ -230,9 +235,7 @@
   transition: all 0.2s ease;
 }
 
-.photoselect-back-button-container:hover {
-  transform: translateY(-2px);
-}
+/* 터치스크린용으로 호버 효과 제거 */
 
 .photoselect-back-button-container:active {
   transform: translateY(0);
@@ -302,9 +305,7 @@
   transition: all 0.2s ease;
 }
 
-.next-button-container:hover:not(.disabled) {
-  transform: translateY(-2px);
-}
+/* 터치스크린용으로 호버 효과 제거 */
 
 .next-button-container:active:not(.disabled) {
   transform: translateY(0);
@@ -467,7 +468,7 @@
   }
 }
 
-/* 터치 피드백 효과 */
+/* 터치 피드백 효과 - 호버 조건 제거 */
 .photoselect-photo-item:not(.selected):active,
 .next-button-container:active:not(.disabled) {
   animation: touchFeedback 0.1s ease;
@@ -479,18 +480,17 @@
   100% { transform: scale(1); }
 }
 
-@media (hover: none) and (pointer: coarse) {
-  .photoselect-photo-item {
-    min-height: 48px; /* 터치 타겟 최소 크기 */
-  }
-  
-  .photoselect-back-button,
-  .next-button {
-    min-height: 48px;
-    min-width: 48px;
-  }
-  
-  .photoselect-frame-slot {
-    min-height: 48px;
-  }
+/* 터치스크린 전용 스타일 - 호버 미디어 쿼리 제거 */
+.photoselect-photo-item {
+  min-height: 48px; /* 터치 타겟 최소 크기 */
+}
+
+.photoselect-back-button,
+.next-button {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+.photoselect-frame-slot {
+  min-height: 48px;
 }

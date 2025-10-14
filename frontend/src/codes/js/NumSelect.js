@@ -34,7 +34,7 @@ const NextButton = ({ onClick }) => {
 };
 
 // App.js로부터 onBack과 onNext를 props로 받습니다.
-const NumSelect = ({ onBack, onNext, initialCount = 1 }) => {
+const NumSelect = ({ onBack, onNext, initialCount = 2 }) => {
   const [photoCount, setPhotoCount] = useState(initialCount);
 
   useEffect(() => {
@@ -42,14 +42,14 @@ const NumSelect = ({ onBack, onNext, initialCount = 1 }) => {
   }, [initialCount]);
 
   const handleDecrease = () => {
-    if (photoCount > 1) {
-      setPhotoCount(photoCount - 1);
+    if (photoCount > 2) {
+      setPhotoCount(photoCount - 2);
     }
   };
 
   const handleIncrease = () => {
-    if (photoCount < 10) { 
-      setPhotoCount(photoCount + 1);
+    if (photoCount < 4) { 
+      setPhotoCount(photoCount + 2);
     }
   };
 
@@ -82,7 +82,7 @@ const NumSelect = ({ onBack, onNext, initialCount = 1 }) => {
       </div>
       <div className="counter-section">
         <div 
-          className={`minus-button ${photoCount <= 1 ? 'disabled' : ''}`}
+          className={`minus-button ${photoCount <=  2? 'disabled' : ''}`}
           onClick={handleDecrease}
         >
           <img alt="minus circle" src={EllipseCircle} />
@@ -92,7 +92,7 @@ const NumSelect = ({ onBack, onNext, initialCount = 1 }) => {
           {photoCount}
         </div>
         <div 
-          className={`plus-button ${photoCount >= 10 ? 'disabled' : ''}`}
+          className={`plus-button ${photoCount >= 4 ? 'disabled' : ''}`}
           onClick={handleIncrease}
         >
           <img alt="plus circle" src={EllipseCircle} />

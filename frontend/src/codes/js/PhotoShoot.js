@@ -4,10 +4,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import '../css/PhotoShoot.css';
 
 const PhotoShoot = ({ onComplete }) => {
-  const [countdown, setCountdown] = useState(10); //카운트다운 숫자
+  const [countdown, setCountdown] = useState(10); //카운트다운 숫자 (10초로 설정)
   const [photoCount, setPhotoCount] = useState(0);
   const [isShooting, setIsShooting] = useState(false);
   const [capturedPhotoUrls, setCapturedPhotoUrls] = useState([]);
+  const [cameraError, setCameraError] = useState(false); // 카메라 오류 상태
   
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -27,6 +28,7 @@ const PhotoShoot = ({ onComplete }) => {
         }
       } catch (err) {
         console.error("카메라 접근 오류:", err);
+        setCameraError(true);
         alert("카메라를 사용할 수 없습니다. 브라우저 설정을 확인해주세요.");
       }
     };
@@ -116,15 +118,14 @@ const PhotoShoot = ({ onComplete }) => {
         if (prev <= 1) {
           clearInterval(timerIdRef.current);
           setIsShooting(true);
-          setTimeout(() => setIsShooting(false), 500); //1000ms = 1초
+          setTimeout(() => setIsShooting(false), 500); // 촬영 효과 0.5초
           capturePhotoAndSend();
           setPhotoCount(count => count + 1);
-          return 1;//시간 조절하기
-
+          return 10; // 다음 촬영을 위해 10초로 리셋
         }
         return prev - 1;
       });
-    }, 100);
+    }, 1000); // 1초마다 카운트다운
 
     return () => {
       if (timerIdRef.current) clearInterval(timerIdRef.current);
@@ -147,6 +148,13 @@ const PhotoShoot = ({ onComplete }) => {
   };
 
   const isComplete = capturedPhotoUrls.length >= 8;
+
+  // 임시 다음 페이지로 넘어가는 함수
+  const handleSkipToNext = () => {
+    // 더미 URL 배열 생성 (8개)
+    const dummyUrls = Array(8).fill().map((_, index) => `dummy-photo-${index + 1}.jpg`);
+    if (onComplete) onComplete(dummyUrls);
+  };
 
   if (isComplete) {
     return (
@@ -180,6 +188,38 @@ const PhotoShoot = ({ onComplete }) => {
           <div className="shooting-effect">📸</div>
         </div>
       )}
+      
+      {/* ======================================================
+          [임시 기능] 개발 및 테스트용 Next 버튼
+          - 목적: 빠른 페이지 전환 테스트
+          - 위치: 우측 하단 고정
+          - 기능: 더미 이미지 URL 생성 후 다음 페이지로 전환
+          
+          [삭제 방법]
+          1. 이 주석 블록 전체 삭제
+          2. 상단의 handleSkipToNext 함수 삭제
+          ====================================================== */}
+      <div className="emergency-controls">
+        <button 
+          className="skip-button" 
+          onClick={handleSkipToNext}
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            right: '20px',
+            padding: '10px 20px',
+            backgroundColor: '#ff4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            fontSize: '16px',
+            cursor: 'pointer',
+            zIndex: 1000
+          }}
+        >
+          다음 페이지로 이동 (개발용)
+        </button>
+      </div>
     </div>
   );
 };
