@@ -53,7 +53,6 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
     Returns:
         str: 합성 완료된 최종 이미지의 로컬 경로
     """
-    # 프레임 경로
     frame_path = os.path.join(FRAME_DIR, f"{frame_key}.png")
     if not os.path.exists(frame_path):
         raise FileNotFoundError(f"프레임 파일을 찾을 수 없습니다: {frame_path}")
@@ -61,12 +60,13 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
     frame = Image.open(frame_path).convert("RGBA")
     frame_w, frame_h = frame.size
 
-    # 프레임 좌표
-    base_positions = FRAME_POSITIONS.get(frame_key)
-    if base_positions is None:
-        raise ValueError(f"등록되지 않은 프레임 키입니다: {frame_key}")
+    # 배경 투명 레이어
+    base = Image.new("RGBA", (frame_w, frame_h), (0, 0, 0, 0))
 
-    # 실제 픽셀 단위로 변환
+    # 좌표 계산
+    base_positions = FRAME_POSITIONS.get(frame_key, FRAME_POSITIONS["BlackRoundFrame"])
+    
+    # 실제 픽셀 좌표로 변환
     positions = [
         {
             "x": int(p["x"] * frame_w),
@@ -77,7 +77,7 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
         for p in base_positions
     ]
 
-    # 4장 이미지 합성
+    # 사진 먼저 base에 붙이기
     for i, photo_url in enumerate(photos[:4]):
         pos = positions[i]
         filename = os.path.basename(photo_url)
@@ -94,11 +94,15 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
         if grayscale:
             img = ImageOps.grayscale(img).convert("RGBA")
 
-        frame.paste(img, (pos["x"], pos["y"]), img)
+        base.paste(img, (pos["x"], pos["y"]), img)
 
-    # ✅ 최종 파일 저장
+    # 마지막에 프레임 덮기
+    base.alpha_composite(frame)
+
+    # PNG로 저장
     output_path = os.path.join(FINAL_DIR, output_filename)
-    frame.save(output_path)
+    base.save(output_path, "PNG")
     print(f"✅ 합성 완료 → {output_path}")
-    
+
     return output_path
+
