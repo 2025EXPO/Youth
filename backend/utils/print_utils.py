@@ -1,4 +1,7 @@
-# backend/print_utils.py
+# PDF 생성 및 프린터
+# 인쇄용 PDF 생성 (reportlab 사용)
+# 실제 프린터로 자동 출력 명령 전송 (lp 등)
+
 import os
 import uuid
 import subprocess
