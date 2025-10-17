@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import '../css/Start.css';
 
 const Start = ({ onComplete }) => {
-  const [countdown, setCountdown] = useState(2);
+  const [countdown, setCountdown] = useState(3);
   const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {

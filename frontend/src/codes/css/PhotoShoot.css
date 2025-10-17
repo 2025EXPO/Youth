@@ -33,7 +33,7 @@
 .photo-count {
   position: absolute;
   right: 10vw;
-  top: 15vh;
+  top: 18vh; /* 15vh에서 18vh로 아래로 조정 */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -52,7 +52,7 @@
 .count-number {
   font-family: 'Noto Sans', sans-serif;
   font-size: 5vw; /* 기존 4vw에서 크기 증가 */
-  font-weight: 700; /* 기존 100에서 굵게(bold) 변경 */
+  font-weight: 100; /* 피그마 디자인에 맞춰 thin으로 변경 */
   color: #000000;
   text-align: center;
   -webkit-font-smoothing: antialiased;
@@ -72,8 +72,8 @@
 /* 남은 시간 영역 (다시 보이도록 복구) */
 .time-remaining {
   position: absolute;
-  right: 10vw;
-  top: 65vh;
+  right: 10.5vw; /* 11vw에서 10.5vw로 아주 조금 오른쪽으로 조정 */
+  top: 58vh; /* 62vh에서 58vh로 더 위로 조정 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -92,7 +92,7 @@
 .countdown-number {
   font-family: 'Noto Sans', sans-serif;
   font-size: 5vw; /* 기존 4vw에서 크기 증가 */
-  font-weight: 700; /* 기존 100에서 굵게(bold) 변경 */
+  font-weight: 100; /* 피그마 디자인에 맞춰 thin으로 변경 */
   color: #000000;
   text-align: center;
   transition: color 0.3s ease;
@@ -102,7 +102,7 @@
 
 .countdown-number.red {
   color: #ff0000;
-  font-weight: 700; /* 굵은 상태 유지 */
+  font-weight: 100; /* thin 상태 유지 */
 }
 
 /* 촬영 피드백 오버레이 */

@@ -4,23 +4,29 @@ import React, { useState } from 'react';
 import '../css/PhotoSelect.css';
 import NextArrow from '../../img/NextArrow.png'; // NumSelect에서 사용하던 이미지 재활용
 import BackArrow from '../../img/BackArrow.png'; // NumSelect에서 사용하던 이미지 재활용
+import Frame from '../../img/frames/WhiteRound.png';
 
 // App.js로부터 photos, onComplete, onBack 함수를 props로 받습니다.
 function PhotoSelect({ photos, onComplete, onBack }) {
   // 사용자가 선택한 사진들의 URL을 순서대로 저장하는 배열
   const [selectedPhotos, setSelectedPhotos] = useState([]);
 
-  // 사진 클릭 이벤트 핸들러
+  // 사진 클릭 이벤트 핸들러 - 선택/해제 토글 기능
   const togglePhotoSelection = (photoUrl) => {
     setSelectedPhotos(prevSelected => {
       // 이미 선택된 사진인지 확인
       if (prevSelected.includes(photoUrl)) {
-        // 이미 선택되었다면, 선택 목록에서 제거
+        // 이미 선택되었다면, 선택 목록에서 제거 (선택 해제)
+        console.log('사진 선택 해제:', photoUrl);
         return prevSelected.filter(url => url !== photoUrl);
       } else {
         // 아직 4장이 안 찼다면, 선택 목록에 추가
         if (prevSelected.length < 4) {
+          console.log('사진 선택:', photoUrl);
           return [...prevSelected, photoUrl];
+        } else {
+          // 4장이 꽉 찼을 때 알림
+          console.log('최대 4장까지만 선택할 수 있습니다.');
         }
       }
       // 4장이 꽉 찼고, 선택되지 않은 사진을 클릭했다면, 변경 없음
@@ -46,13 +52,17 @@ function PhotoSelect({ photos, onComplete, onBack }) {
         <div className="film-frame">
           <div className="photoselect-frame-container">
             {/* 이 부분은 프레임 배경 이미지가 필요하다면 추가하세요 */}
-            {/* <img src="/path/to/frame.png" alt="Film Frame" className="photoselect-frame-image" /> */}
+            <img src={Frame} alt="Film Frame" className="photoselect-frame-image" />
             <div className="photoselect-frame-slots">
               <div className="photoselect-frame-row">
                 {[0, 1, 2, 3].map(index => (
                   <div className="photoselect-frame-slot" key={index}>
                     {selectedPhotos[index] ? (
-                      <div className="selected-photo">
+                      <div 
+                        className="selected-photo clickable"
+                        onClick={() => togglePhotoSelection(selectedPhotos[index])}
+                        title="클릭하여 선택 해제"
+                      >
                         <img src={selectedPhotos[index]} alt={`선택된 사진 ${index + 1}`} />
                       </div>
                     ) : (
