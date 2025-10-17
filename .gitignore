@@ -30,3 +30,5 @@ yarn-error.log*
 
 # 웹캠 사진 폴더 제외
 uploads/
+*.pem
+*.ppk
