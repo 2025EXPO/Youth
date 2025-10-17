@@ -1,4 +1,6 @@
 # app.py
+
+import boto3
 import os
 import base64
 import uuid
@@ -9,6 +11,14 @@ from PIL import Image, ImageOps
 
 app = Flask(__name__)
 CORS(app)
+
+S3_BUCKET = "expo-2025-s3"
+S3_REGION = "ap-northeast-3"
+S3_BASE_URL = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com"
+
+# IAM Role 기반(Access Key / Secret Key 없이)
+s3 = boto3.client("s3", region_name=S3_REGION)
+
 
 # === 경로 설정 ===
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -45,6 +55,7 @@ def capture():
 def final():
     import json
     from PIL import Image, ImageOps
+    import boto3
 
     try:
         print("===== /final 요청 도착 =====")
@@ -55,7 +66,13 @@ def final():
         grayscale = data.get("grayscale", False)
         frame_key = data.get("frameKey", "frame1")
 
-        # 🔹 프레임 매핑
+        # S3 기본 설정
+        S3_BUCKET = "expo-2025-s3"  # 버킷 이름
+        S3_REGION = "ap-northeast-3"  # 오사카 리전
+        S3_BASE_URL = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com"
+        s3 = boto3.client("s3", region_name=S3_REGION)
+
+        # ✅ 프레임 매핑
         frame_map = {
             "frame1": "WhiteRound.png",
             "frame2": "BlackRound.png",
@@ -80,26 +97,13 @@ def final():
         print(f"프레임 크기: {frame_w}x{frame_h}")
 
         # ✅ 모든 프레임 공통 좌표
-        # 기준: 프레임 크기 592.67×1778
-        # x = 23.71, w = 545.24, h = 344.73
-        # y = 29.63 / 393.13 / 756.63 / 1120.13
         base_positions = [
             {"x": 23.71 / 592.67, "y": 29.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
             {"x": 23.71 / 592.67, "y": 393.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
             {"x": 23.71 / 592.67, "y": 756.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
             {"x": 23.71 / 592.67, "y": 1120.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
         ]
-        # # ✅ 새 프레임 크기 572×1700 기준
-        # base_positions = [
-        #     {"x": 22.88 / 572, "y": 28.33 / 1700, "w": 526.76 / 572, "h": 329.51 / 1700},
-        #     {"x": 22.88 / 572, "y": 375.22 / 1700, "w": 526.76 / 572, "h": 329.51 / 1700},
-        #     {"x": 22.88 / 572, "y": 723.34 / 1700, "w": 526.76 / 572, "h": 329.51 / 1700},
-        #     {"x": 22.88 / 572, "y": 1071.45 / 1700, "w": 526.76 / 572, "h": 329.51 / 1700},
-        # ]
 
-               
-
-        # ✅ 프레임별 좌표 설정 (전부 동일 구조)
         frame_positions_percent = {
             "WhiteRound.png": base_positions,
             "BlackRound.png": base_positions,
@@ -117,7 +121,6 @@ def final():
             print(f"❌ '{frame_filename}'에 대한 좌표 정의 없음")
             return jsonify({"error": "좌표 정의가 없습니다."}), 400
 
-        # ✅ 퍼센트 → 실제 px 변환
         positions = [
             {
                 "x": int(p["x"] * frame_w),
@@ -149,17 +152,33 @@ def final():
             frame.paste(img, (pos["x"], pos["y"]), img)
             print(f"✅ 사진 {i+1} 합성 완료")
 
-        # 🔹 결과 저장
+        # 🔹 결과 파일 저장 (임시)
         output_filename = f"final_{uuid.uuid4()}.png"
         output_path = os.path.join(FINAL_DIR, output_filename)
         frame.save(output_path)
         print("✅ 최종 합성 완료:", output_path)
 
-        return jsonify({"url": f"/final/{output_filename}"})
+        # ✅ S3 업로드
+        s3_key = f"final/{output_filename}"
+        with open(output_path, "rb") as f:
+            s3.put_object(
+                Bucket=S3_BUCKET,
+                Key=s3_key,
+                Body=f,
+                ContentType="image/png",
+                ACL="public-read"
+            )
+
+        # ✅ 업로드된 S3 URL 반환
+        s3_url = f"{S3_BASE_URL}/{s3_key}"
+        print("✅ S3 업로드 완료:", s3_url)
+
+        return jsonify({"url": s3_url})
 
     except Exception as e:
         print("❌ /final 처리 중 오류 발생:", e)
         return jsonify({"error": str(e)}), 500
+
 
 
 

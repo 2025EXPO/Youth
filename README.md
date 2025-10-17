@@ -132,24 +132,89 @@ https://버킷이름.s3.ap-northeast-3.amazonaws.com/final/test.png
 
 ## 근데 내가 Access Key / Secret Key 발급 금지된 상태라 IAM Role을 사용해야해서 EC2로 서버 배포하기로 했습니다...
 
-s3 접근 권한이 내 컴퓨터에는 없지만 EC2에는 IAM Role 덕분에 있는 상태이기 때문...
+## 🚀 EC2 서버 배포 및 코드 반영 방식
+
+### ✅ 배경
+
+Access Key / Secret Key 발급이 금지된 환경이므로,
+**IAM Role**을 이용해 **EC2 인스턴스에 직접 Flask 서버를 배포**했습니다.
+
+> 💡 내 로컬 PC에는 S3 접근 권한이 없지만,
+> EC2에는 **IAM Role(SafeRoleForAllSguUsers)** 이 연결되어 있어
+> Flask가 `boto3`를 통해 S3 업로드를 수행할 수 있습니다.
+
+---
+
+### 🧩 서버 코드 전송 (로컬 → EC2)
+
+코드 수정 후 EC2로 직접 덮어쓰기 할 때👇
 
 ```bash
-scp -i "expo-2025.pem" -r "C:\Users\kangd\Documents\GitHub\Youth\backend" ec2-user@13.208.215.216:/home/ec2-user/  # 덮어쓰기
-
-pkill -f app.py       # (선택) 기존 서버 중지
-cd Youth/backend
-python3 app.py
-
+scp -i "C:\Users\kangd\Documents\GitHub\Youth\expo-2025.pem" -r "C:\Users\kangd\Documents\GitHub\Youth\backend" ec2-user@13.208.215.216:/home/ec2-user/
 ```
 
-코드 수정 후 반영하는 방법
-로컬에서 코드를 수정하고 push한 뒤,
-EC2에서👇
+> ⚠️ `scp` 명령은 **로컬(내 PC)** 에서 실행해야 합니다.
+> (PuTTY 안이 아니라 Windows PowerShell에서 실행)
+
+---
+
+### 🧠 서버 재실행
+
+EC2에 접속(PuTTY)한 뒤👇
+
+```bash
+pkill -f app.py       # (선택) 기존 Flask 서버 중지
+cd Youth/backend      # Flask 프로젝트 폴더로 이동
+python3 app.py        # Flask 서버 실행
+```
+
+> ✅ Flask 서버가 정상 실행되면
+> `* Running on http://0.0.0.0:5000` 로그가 표시됩니다.
+
+---
+
+### 🔄 코드 수정 반영 (Git 방식)
+
+코드를 자주 수정한다면 `scp` 대신 **Git pull 방식**을 권장합니다.
+
+로컬에서 수정 후 GitHub에 push한 뒤,
+EC2 터미널(PuTTY)에서👇
 
 ```bash
 cd Youth
 git pull origin main
 ```
 
-rm -rf 삭제할 폴더
+> GitHub의 최신 코드가 EC2에 자동 반영됩니다.
+
+---
+
+### 🧹 폴더 삭제 (불필요한 폴더 정리)
+
+EC2에서 불필요한 폴더를 삭제할 때👇
+
+```bash
+rm -rf backend
+```
+
+> ⚠️ `rm -rf` 명령은 복구 불가능하므로 **삭제 대상이 정확한지 꼭 확인**하세요.
+
+---
+
+## ✅ 전체 흐름 요약
+
+| 단계                 | 위치         | 설명                                 |
+| -------------------- | ------------ | ------------------------------------ |
+| 코드 수정            | 로컬 (내 PC) | VSCode 등에서 수정                   |
+| GitHub 업로드        | 로컬         | GitHub Desktop 또는 CLI로 push       |
+| EC2 업데이트         | EC2 (PuTTY)  | `git pull origin main`               |
+| 서버 실행            | EC2 (PuTTY)  | `cd Youth/backend && python3 app.py` |
+| 파일 직접 전송(대안) | 로컬         | `scp` 명령으로 수동 업로드           |
+
+---
+
+📘 **요약 한 줄**
+
+> 내 컴퓨터에는 AWS 권한이 없지만,
+> EC2는 IAM Role을 통해 자동 인증되므로
+> Flask 서버를 EC2에 배포하고, Git pull로 최신 코드만 반영하는 구조입니다 ✅
