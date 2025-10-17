@@ -8,6 +8,37 @@ import os
 from PIL import Image, ImageOps
 from utils.file_utils import FRAME_DIR, FINAL_DIR, UPLOAD_DIR
 
+# 프레임별 4컷 좌표 비율 정의
+FRAME_POSITIONS = {
+    "BlackRoundFrame": [
+        {"x": 23.71 / 592.67, "y": 29.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
+        {"x": 23.71 / 592.67, "y": 393.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
+        {"x": 23.71 / 592.67, "y": 756.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
+        {"x": 23.71 / 592.67, "y": 1120.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
+    ],
+    "BlackTextFrame": [
+        {"x": 23.71 / 592.67, "y": 29.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
+        {"x": 23.71 / 592.67, "y": 393.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
+        {"x": 23.71 / 592.67, "y": 756.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
+        {"x": 23.71 / 592.67, "y": 1120.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
+    ],
+    # 나머지 프레임 동일 좌표 등록
+    "OceanRoundFrame": None,
+    "OceanTextFrame": None,
+    "PartyRoundFrame": None,
+    "PartyTextFrame": None,
+    "ShinguFrame": None,
+    "StarRoundFrame": None,
+    "StarTextFrame": None,
+    "WhiteRoundFrame": None,
+    "WhiteTextFrame": None,
+    "ZebraRoundFrame": None,
+    "ZebraTextFrame": None,
+}
+
+for key, val in list(FRAME_POSITIONS.items()):
+    if val is None:
+        FRAME_POSITIONS[key] = FRAME_POSITIONS["BlackRoundFrame"]
 
 def combine_photos(photos, frame_key, grayscale, output_filename):
     """
@@ -30,14 +61,12 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
     frame = Image.open(frame_path).convert("RGBA")
     frame_w, frame_h = frame.size
 
-    # 4컷 좌표 비율 (기준 프레임: 592.67×1778)
-    base_positions = [
-        {"x": 23.71 / 592.67, "y": 29.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
-        {"x": 23.71 / 592.67, "y": 393.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
-        {"x": 23.71 / 592.67, "y": 756.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
-        {"x": 23.71 / 592.67, "y": 1120.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
-    ]
+    # 프레임 좌표
+    base_positions = FRAME_POSITIONS.get(frame_key)
+    if base_positions is None:
+        raise ValueError(f"등록되지 않은 프레임 키입니다: {frame_key}")
 
+    # 실제 픽셀 단위로 변환
     positions = [
         {
             "x": int(p["x"] * frame_w),
@@ -48,7 +77,7 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
         for p in base_positions
     ]
 
-    # ✅ 4장 이미지 합성
+    # 4장 이미지 합성
     for i, photo_url in enumerate(photos[:4]):
         pos = positions[i]
         filename = os.path.basename(photo_url)
@@ -71,5 +100,5 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
     output_path = os.path.join(FINAL_DIR, output_filename)
     frame.save(output_path)
     print(f"✅ 합성 완료 → {output_path}")
-
+    
     return output_path

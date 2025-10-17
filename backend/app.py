@@ -11,7 +11,7 @@ from routes.health_route import health_bp
 app = Flask(__name__)
 CORS(app)
 
-# 블루프린트 등록
+# 모듈 등록
 app.register_blueprint(capture_bp)
 app.register_blueprint(final_bp)
 app.register_blueprint(print_bp)
