@@ -1,6 +1,7 @@
 // 프레임 + 로고 + 흑백/컬러 선택
 import React, { useState, useEffect } from "react";
 import "../css/FrameSelect.css";
+
 import WhiteRoundFrame from "../../img/frames/WhiteRound.png";
 import StarRoundFrame from "../../img/frames/StarRound.png";
 import OceanRoundFrame from "../../img/frames/OceanRound.png";
@@ -15,6 +16,7 @@ import WhiteTextFrame from "../../img/frames/WhiteText.png";
 import BlackTextFrame from "../../img/frames/BlackText.png";
 import PartyTextFrame from "../../img/frames/PartyText.png";
 import ZebraTextFrame from "../../img/frames/ZebraText.png";
+
 import NextArrow from "../../img/NextArrow.png";
 import BackArrow from "../../img/BackArrow.png";
 import LogoRound from "../../img/logos/LogoRound.png";
