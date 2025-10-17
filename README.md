@@ -133,3 +133,23 @@ https://버킷이름.s3.ap-northeast-3.amazonaws.com/final/test.png
 ## 근데 내가 Access Key / Secret Key 발급 금지된 상태라 IAM Role을 사용해야해서 EC2로 서버 배포하기로 했습니다...
 
 s3 접근 권한이 내 컴퓨터에는 없지만 EC2에는 IAM Role 덕분에 있는 상태이기 때문...
+
+```bash
+scp -i "expo-2025.pem" -r "C:\Users\kangd\Documents\GitHub\Youth\backend" ec2-user@13.208.215.216:/home/ec2-user/  # 덮어쓰기
+
+pkill -f app.py       # (선택) 기존 서버 중지
+cd Youth/backend
+python3 app.py
+
+```
+
+코드 수정 후 반영하는 방법
+로컬에서 코드를 수정하고 push한 뒤,
+EC2에서👇
+
+```bash
+cd Youth
+git pull origin main
+```
+
+rm -rf 삭제할 폴더
