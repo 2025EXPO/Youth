@@ -1,26 +1,23 @@
-# app.py
-
 import boto3
 import os
 import base64
 import uuid
-from flask import Flask, request, jsonify, send_from_directory
-from print_utils import make_print_pdf, print_pdf   
+from datetime import datetime
+from flask import Flask, request, jsonify
+from print_utils import make_print_pdf, print_pdf
 from flask_cors import CORS
 from PIL import Image, ImageOps
 
 app = Flask(__name__)
 CORS(app)
 
+# === AWS S3 설정 ===
 S3_BUCKET = "expo-2025-s3"
 S3_REGION = "ap-northeast-3"
 S3_BASE_URL = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com"
-
-# IAM Role 기반(Access Key / Secret Key 없이)
 s3 = boto3.client("s3", region_name=S3_REGION)
 
-
-# === 경로 설정 ===
+# === 로컬 폴더 (임시 저장용) ===
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FRAME_DIR = os.path.join(BASE_DIR, "frames")
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
@@ -31,8 +28,20 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(FINAL_DIR, exist_ok=True)
 os.makedirs(PRINT_DIR, exist_ok=True)
 
+# === 날짜별 prefix 자동 생성 ===
+def get_today_prefix():
+    return datetime.now().strftime("%m%d")  # 예: "1018"
 
-# === 1️⃣ 사진 업로드 (base64 저장) ===
+# === 현재 prefix(폴더) 내 파일 개수를 세고 다음 번호 반환 ===
+def get_next_index(bucket, prefix):
+    response = s3.list_objects_v2(Bucket=bucket, Prefix=prefix)
+    count = 0
+    if "Contents" in response:
+        count = len(response["Contents"])
+    return count + 1
+
+
+# === 1️⃣ /capture : base64 사진 업로드 → S3 uploads/1018_img{n}.jpg ===
 @app.route("/capture", methods=["POST"])
 def capture():
     try:
@@ -40,39 +49,47 @@ def capture():
         img_data = data["image"]
         img_bytes = base64.b64decode(img_data.split(",")[1])
 
-        filename = f"{uuid.uuid4()}.jpg"
-        path = os.path.join(UPLOAD_DIR, filename)
-        with open(path, "wb") as f:
+        date_prefix = get_today_prefix()
+        prefix = f"uploads/{date_prefix}_"
+        index = get_next_index(S3_BUCKET, prefix)
+        filename = f"{date_prefix}_img{index}.jpg"
+        local_path = os.path.join(UPLOAD_DIR, filename)
+
+        # 로컬 임시 저장
+        with open(local_path, "wb") as f:
             f.write(img_bytes)
 
-        return jsonify({"imageUrl": f"/uploads/{filename}"})
+        # ✅ S3 업로드
+        s3_key = f"uploads/{filename}"
+        with open(local_path, "rb") as f:
+            s3.put_object(
+                Bucket=S3_BUCKET,
+                Key=s3_key,
+                Body=f,
+                ContentType="image/jpeg",
+                ACL="public-read"
+            )
+
+        s3_url = f"{S3_BASE_URL}/{s3_key}"
+        print(f"✅ /capture 업로드 완료: {s3_url}")
+
+        return jsonify({"imageUrl": s3_url, "index": index})
+
     except Exception as e:
+        print("❌ /capture 오류:", e)
         return jsonify({"error": str(e)}), 500
 
 
-# === 2️⃣ 4장 + 프레임 합성 ===
+# === 2️⃣ /final : 4장 합성 → S3 final/1018_img{n}.png ===
 @app.route("/final", methods=["POST"])
 def final():
-    import json
-    from PIL import Image, ImageOps
-    import boto3
-
     try:
-        print("===== /final 요청 도착 =====")
         data = request.get_json()
-        print("요청 데이터:", data)
-
         photos = data.get("photos", [])
         grayscale = data.get("grayscale", False)
         frame_key = data.get("frameKey", "frame1")
 
-        # S3 기본 설정
-        S3_BUCKET = "expo-2025-s3"  # 버킷 이름
-        S3_REGION = "ap-northeast-3"  # 오사카 리전
-        S3_BASE_URL = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com"
-        s3 = boto3.client("s3", region_name=S3_REGION)
-
-        # ✅ 프레임 매핑
+        # 프레임 매핑
         frame_map = {
             "frame1": "WhiteRound.png",
             "frame2": "BlackRound.png",
@@ -87,39 +104,16 @@ def final():
 
         frame_filename = frame_map.get(frame_key, "WhiteRound.png")
         frame_path = os.path.join(FRAME_DIR, frame_filename)
-        if not os.path.exists(frame_path):
-            print("❌ 프레임 파일 없음:", frame_path)
-            return jsonify({"error": f"Frame not found: {frame_path}"}), 400
-
         frame = Image.open(frame_path).convert("RGBA")
         frame_w, frame_h = frame.size
-        print(f"✅ 프레임 로드 완료: {frame_path}")
-        print(f"프레임 크기: {frame_w}x{frame_h}")
 
-        # ✅ 모든 프레임 공통 좌표
+        # 좌표
         base_positions = [
             {"x": 23.71 / 592.67, "y": 29.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
             {"x": 23.71 / 592.67, "y": 393.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
             {"x": 23.71 / 592.67, "y": 756.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
             {"x": 23.71 / 592.67, "y": 1120.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
         ]
-
-        frame_positions_percent = {
-            "WhiteRound.png": base_positions,
-            "BlackRound.png": base_positions,
-            "PartyRound.png": base_positions,
-            "ZebraRound.png": base_positions,
-            "Shingu.png": base_positions,
-            "StarRound.png": base_positions,
-            "OceanRound.png": base_positions,
-            "ShinguFunny.png": base_positions,
-            "DenimFrame.png": base_positions,
-        }
-
-        percents = frame_positions_percent.get(frame_filename)
-        if not percents:
-            print(f"❌ '{frame_filename}'에 대한 좌표 정의 없음")
-            return jsonify({"error": "좌표 정의가 없습니다."}), 400
 
         positions = [
             {
@@ -128,35 +122,34 @@ def final():
                 "width": int(p["w"] * frame_w),
                 "height": int(p["h"] * frame_h),
             }
-            for p in percents
+            for p in base_positions
         ]
 
-        print("📐 변환된 실제 positions:", positions)
-
-        # 🔹 사진 합성
+        # 사진 합성
         for i, photo_url in enumerate(photos):
             if i >= len(positions):
                 break
             pos = positions[i]
-            photo_path = photo_url.replace("/uploads/", f"{UPLOAD_DIR}/")
-            if not os.path.exists(photo_path):
-                print(f"❌ 사진 파일 없음: {photo_path}")
+            filename = os.path.basename(photo_url)
+            local_photo_path = os.path.join(UPLOAD_DIR, filename)
+            if not os.path.exists(local_photo_path):
                 continue
 
-            img = Image.open(photo_path).convert("RGBA").resize(
+            img = Image.open(local_photo_path).convert("RGBA").resize(
                 (pos["width"], pos["height"])
             )
             if grayscale:
                 img = ImageOps.grayscale(img).convert("RGBA")
 
             frame.paste(img, (pos["x"], pos["y"]), img)
-            print(f"✅ 사진 {i+1} 합성 완료")
 
-        # 🔹 결과 파일 저장 (임시)
-        output_filename = f"final_{uuid.uuid4()}.png"
+        # ✅ 파일명 자동 생성
+        date_prefix = get_today_prefix()
+        prefix = f"final/{date_prefix}_"
+        index = get_next_index(S3_BUCKET, prefix)
+        output_filename = f"{date_prefix}_img{index}.png"
         output_path = os.path.join(FINAL_DIR, output_filename)
         frame.save(output_path)
-        print("✅ 최종 합성 완료:", output_path)
 
         # ✅ S3 업로드
         s3_key = f"final/{output_filename}"
@@ -169,66 +162,59 @@ def final():
                 ACL="public-read"
             )
 
-        # ✅ 업로드된 S3 URL 반환
         s3_url = f"{S3_BASE_URL}/{s3_key}"
-        print("✅ S3 업로드 완료:", s3_url)
+        print(f"✅ /final 업로드 완료: {s3_url}")
 
-        return jsonify({"url": s3_url})
+        return jsonify({"url": s3_url, "index": index})
 
     except Exception as e:
-        print("❌ /final 처리 중 오류 발생:", e)
+        print("❌ /final 오류:", e)
         return jsonify({"error": str(e)}), 500
 
 
-
-
-
-# === 3️⃣ 인쇄용: 두 장 나란히 붙이기 + 자동 프린트 ===
+# === 3️⃣ /print : PDF 생성 → S3 print/1018_img{n}.pdf ===
 @app.route("/print", methods=["POST"])
 def print_ready():
     try:
         data = request.get_json()
         final_url = data["url"]
-        final_path = final_url.replace("/final/", f"{FINAL_DIR}/")
+        local_final_path = os.path.join(FINAL_DIR, os.path.basename(final_url))
 
-        print(f"📂 인쇄 요청: {final_url}")
+        # PDF 생성
+        pdf_path = make_print_pdf(local_final_path)
 
-        # ✅ PDF 생성
-        pdf_path = make_print_pdf(final_path)
+        # ✅ 파일명 자동 생성
+        date_prefix = get_today_prefix()
+        prefix = f"print/{date_prefix}_"
+        index = get_next_index(S3_BUCKET, prefix)
+        filename = f"{date_prefix}_img{index}.pdf"
 
-        # ✅ 인쇄 명령 전송
-        print_pdf(pdf_path)
+        # ✅ S3 업로드
+        s3_key = f"print/{filename}"
+        with open(pdf_path, "rb") as f:
+            s3.put_object(
+                Bucket=S3_BUCKET,
+                Key=s3_key,
+                Body=f,
+                ContentType="application/pdf",
+                ACL="public-read"
+            )
 
-        # ✅ 클라이언트 반환
-        filename = os.path.basename(pdf_path)
-        return jsonify({"url": f"/print/{filename}"})
+        s3_url = f"{S3_BASE_URL}/{s3_key}"
+        print(f"✅ /print 업로드 완료: {s3_url}")
+
+        return jsonify({"url": s3_url})
 
     except Exception as e:
-        print("❌ /print 처리 중 오류:", e)
+        print("❌ /print 오류:", e)
         return jsonify({"error": str(e)}), 500
 
 
-
-
-# === 정적 파일 서빙 ===
-@app.route("/uploads/<filename>")
-def serve_uploads(filename):
-    return send_from_directory(UPLOAD_DIR, filename)
-
-@app.route("/final/<filename>")
-def serve_final(filename):
-    return send_from_directory(FINAL_DIR, filename)
-
-@app.route("/print/<filename>")
-def serve_print(filename):
-    return send_from_directory(PRINT_DIR, filename)
-
-
-# === 서버 상태 체크 ===
+# === 서버 상태 ===
 @app.route("/health")
 def health():
     return jsonify({"status": "ok"})
 
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-
