@@ -150,7 +150,7 @@ Access Key / Secret Key 발급이 금지된 환경이므로,
 코드 수정 후 EC2로 직접 덮어쓰기 할 때👇
 
 ```bash
-scp -i "C:\Users\kangd\Documents\GitHub\Youth\expo-2025.pem" -r "C:\Users\kangd\Documents\GitHub\Youth\backend" ec2-user@13.208.215.216:/home/ec2-user/
+scp -i "C:\Users\kangd\Documents\GitHub\Youth\expo-2025.pem" -r "C:\Users\kangd\Documents\GitHub\Youth\backend" ec2-user@13.208.172.221:/home/ec2-user/
 ```
 
 > ⚠️ `scp` 명령은 **로컬(내 PC)** 에서 실행해야 합니다.

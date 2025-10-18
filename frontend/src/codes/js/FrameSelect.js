@@ -32,7 +32,7 @@ import FrameZebra from "../../img/logos/FrameZebra.png";
 import FrameParty from "../../img/logos/FrameParty.png";
 import FrameShingu from "../../img/logos/FrameShingu.png";
 
-const ec2_url = "http://13.208.215.216:5000";
+const ec2_url = "http://13.208.172.221:5000";
 
 const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
     const [selectedFrame, setSelectedFrame] = useState("frame1");
@@ -196,18 +196,18 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
                             className="frameselect-frame-image"
                         />
                         <div className="frameselect-frame-slots">
-                            {/* 
-                ==================== 바로 이 부분들을 수정했습니다! ====================
-                selectedPhotoColor 상태가 'color2'(흑백)일 때 'grayscale' 클래스를 추가합니다.
-                4개의 사진 슬롯 모두 동일하게 수정했습니다.
-                ======================================================================
-              */}
                             <div className="frameselect-frame-row">
                                 <div className="frameselect-frame-slot">
                                     {selectedPhotos && selectedPhotos[0] ? (
                                         <div className="frameselect-selected-photo">
                                             <img
-                                                src={selectedPhotos[0]}
+                                                src={`${ec2_url}${
+                                                    selectedPhotos[0].startsWith(
+                                                        "/"
+                                                    )
+                                                        ? ""
+                                                        : "/"
+                                                }${selectedPhotos[0]}`}
                                                 alt="선택된 사진 1"
                                                 className={
                                                     selectedPhotoColor ===
@@ -229,7 +229,13 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
                                     {selectedPhotos && selectedPhotos[1] ? (
                                         <div className="frameselect-selected-photo">
                                             <img
-                                                src={selectedPhotos[1]}
+                                                src={`${ec2_url}${
+                                                    selectedPhotos[1].startsWith(
+                                                        "/"
+                                                    )
+                                                        ? ""
+                                                        : "/"
+                                                }${selectedPhotos[1]}`}
                                                 alt="선택된 사진 2"
                                                 className={
                                                     selectedPhotoColor ===
@@ -251,7 +257,13 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
                                     {selectedPhotos && selectedPhotos[2] ? (
                                         <div className="frameselect-selected-photo">
                                             <img
-                                                src={selectedPhotos[2]}
+                                                src={`${ec2_url}${
+                                                    selectedPhotos[2].startsWith(
+                                                        "/"
+                                                    )
+                                                        ? ""
+                                                        : "/"
+                                                }${selectedPhotos[2]}`}
                                                 alt="선택된 사진 3"
                                                 className={
                                                     selectedPhotoColor ===
@@ -273,7 +285,13 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
                                     {selectedPhotos && selectedPhotos[3] ? (
                                         <div className="frameselect-selected-photo">
                                             <img
-                                                src={selectedPhotos[3]}
+                                                src={`${ec2_url}${
+                                                    selectedPhotos[3].startsWith(
+                                                        "/"
+                                                    )
+                                                        ? ""
+                                                        : "/"
+                                                }${selectedPhotos[3]}`}
                                                 alt="선택된 사진 4"
                                                 className={
                                                     selectedPhotoColor ===

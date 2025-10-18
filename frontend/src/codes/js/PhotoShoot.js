@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "../css/PhotoShoot.css";
 
 // ✅ Flask 서버 주소 (EC2 IP)
-const API_BASE_URL = "http://13.208.215.216:5000";
+const API_BASE_URL = "http://13.208.172.221:5000";
 
 const PhotoShoot = ({ onComplete }) => {
     const [countdown, setCountdown] = useState(10); // 카운트다운 (초)
@@ -143,6 +143,7 @@ const PhotoShoot = ({ onComplete }) => {
     useEffect(() => {
         if (capturedPhotoUrls.length === 8) {
             console.log("📸 8장 촬영 완료! 다음 페이지로 이동합니다.");
+            console.log("전달할 사진 URL:", capturedPhotoUrls);
             setTimeout(() => {
                 if (onComplete) onComplete(capturedPhotoUrls);
             }, 2000);
