@@ -25,5 +25,13 @@ UPLOAD_DIR = os.path.join(os.getcwd(), "uploads")
 def serve_upload(filename):
     return send_from_directory(UPLOAD_DIR, filename)
 
+# final 폴더 경로
+FINAL_DIR = os.path.join(os.getcwd(), "final")
+
+@app.route("/final/<path:filename>")
+def serve_final(filename):
+    return send_from_directory(FINAL_DIR, filename)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -32,6 +32,8 @@ import FrameZebra from "../../img/logos/FrameZebra.png";
 import FrameParty from "../../img/logos/FrameParty.png";
 import FrameShingu from "../../img/logos/FrameShingu.png";
 
+const ec2_url = "http://13.208.215.216:5000";
+
 const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
     const [selectedFrame, setSelectedFrame] = useState("frame1");
     const [selectedLogo, setSelectedLogo] = useState("logo1");
@@ -134,7 +136,7 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
 
     const handleNext = async () => {
         try {
-            const res = await fetch("http://13.208.215.216:5000/final", {
+            const res = await fetch(`${ec2_url}/final`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 mode: "cors",
@@ -155,14 +157,11 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
             // ✅ 인쇄 API 호출 (두 장 붙여서 프린트)
             if (data.url) {
                 try {
-                    const printRes = await fetch(
-                        "http://13.208.215.216:5000/print",
-                        {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ url: data.url }),
-                        }
-                    );
+                    const printRes = await fetch(`${ec2_url}/print`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ url: data.url }),
+                    });
 
                     const printData = await printRes.json();
                     if (!printRes.ok)
