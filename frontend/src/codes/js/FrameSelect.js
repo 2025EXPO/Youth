@@ -32,9 +32,9 @@ import FrameZebra from "../../img/logos/FrameZebra.png";
 import FrameParty from "../../img/logos/FrameParty.png";
 import FrameShingu from "../../img/logos/FrameShingu.png";
 
-import { getImageUrl } from "../../utils/getImageUrl";
+import BASE_URL from "../../config";
 
-const ec2_url = "http://56.155.45.183:5000";
+const ec2_url = BASE_URL;
 
 const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
     const [selectedFrame, setSelectedFrame] = useState("frame1");
