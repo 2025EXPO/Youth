@@ -38,7 +38,7 @@ def print_ready():
             index = get_next_index(bucket, f"print/{date_prefix}_")
             s3_key = f"print/{date_prefix}_img{index}.pdf"
             s3_upload(pdf_path, s3_key, "application/pdf")
-            s3_url = f"https://{bucket}.s3.{region}.amazonaws.com/{s3_key}"
+            s3_url = f"{get_s3_base_url()}/{s3_key}"
             print(f"✅ S3 업로드 완료: {s3_url}")
         except Exception as s3_err:
             print(f"⚠️ S3 업로드 실패 (무시): {s3_err}")
