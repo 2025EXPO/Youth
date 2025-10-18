@@ -32,6 +32,8 @@ import FrameZebra from "../../img/logos/FrameZebra.png";
 import FrameParty from "../../img/logos/FrameParty.png";
 import FrameShingu from "../../img/logos/FrameShingu.png";
 
+import { getImageUrl } from "../../utils/getImageUrl";
+
 const ec2_url = "http://13.208.172.221:5000";
 
 const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
@@ -201,13 +203,9 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
                                     {selectedPhotos && selectedPhotos[0] ? (
                                         <div className="frameselect-selected-photo">
                                             <img
-                                                src={`${ec2_url}${
-                                                    selectedPhotos[0].startsWith(
-                                                        "/"
-                                                    )
-                                                        ? ""
-                                                        : "/"
-                                                }${selectedPhotos[0]}`}
+                                                src={getImageUrl(
+                                                    selectedPhotos[0]
+                                                )}
                                                 alt="선택된 사진 1"
                                                 className={
                                                     selectedPhotoColor ===
@@ -229,13 +227,9 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
                                     {selectedPhotos && selectedPhotos[1] ? (
                                         <div className="frameselect-selected-photo">
                                             <img
-                                                src={`${ec2_url}${
-                                                    selectedPhotos[1].startsWith(
-                                                        "/"
-                                                    )
-                                                        ? ""
-                                                        : "/"
-                                                }${selectedPhotos[1]}`}
+                                                src={getImageUrl(
+                                                    selectedPhotos[1]
+                                                )}
                                                 alt="선택된 사진 2"
                                                 className={
                                                     selectedPhotoColor ===
@@ -257,13 +251,9 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
                                     {selectedPhotos && selectedPhotos[2] ? (
                                         <div className="frameselect-selected-photo">
                                             <img
-                                                src={`${ec2_url}${
-                                                    selectedPhotos[2].startsWith(
-                                                        "/"
-                                                    )
-                                                        ? ""
-                                                        : "/"
-                                                }${selectedPhotos[2]}`}
+                                                src={getImageUrl(
+                                                    selectedPhotos[2]
+                                                )}
                                                 alt="선택된 사진 3"
                                                 className={
                                                     selectedPhotoColor ===
@@ -285,13 +275,9 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
                                     {selectedPhotos && selectedPhotos[3] ? (
                                         <div className="frameselect-selected-photo">
                                             <img
-                                                src={`${ec2_url}${
-                                                    selectedPhotos[3].startsWith(
-                                                        "/"
-                                                    )
-                                                        ? ""
-                                                        : "/"
-                                                }${selectedPhotos[3]}`}
+                                                src={getImageUrl(
+                                                    selectedPhotos[3]
+                                                )}
                                                 alt="선택된 사진 4"
                                                 className={
                                                     selectedPhotoColor ===

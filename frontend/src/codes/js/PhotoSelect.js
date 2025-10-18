@@ -6,6 +6,8 @@ import NextArrow from "../../img/NextArrow.png"; // NumSelect에서 사용하던
 import BackArrow from "../../img/BackArrow.png"; // NumSelect에서 사용하던 이미지 재활용
 import Frame from "../../img/frames/WhiteRound.png";
 
+import { getImageUrl } from "../../utils/getImageUrl";
+
 // App.js로부터 photos, onComplete, onBack 함수를 props로 받습니다.
 function PhotoSelect({ photos, onComplete, onBack }) {
     // 사용자가 선택한 사진들의 URL을 순서대로 저장하는 배열
@@ -75,7 +77,9 @@ function PhotoSelect({ photos, onComplete, onBack }) {
                                                 title="클릭하여 선택 해제"
                                             >
                                                 <img
-                                                    src={selectedPhotos[index]}
+                                                    src={getImageUrl(
+                                                        selectedPhotos[index]
+                                                    )}
                                                     alt={`선택된 사진 ${
                                                         index + 1
                                                     }`}
@@ -110,11 +114,10 @@ function PhotoSelect({ photos, onComplete, onBack }) {
                                 onClick={() => togglePhotoSelection(photoUrl)}
                             >
                                 <img
-                                    src={`http://13.208.172.221:5000${
-                                        photoUrl.startsWith("/") ? "" : "/"
-                                    }${photoUrl}`}
+                                    src={getImageUrl(photoUrl)}
                                     alt={`촬영된 사진 ${index + 1}`}
                                 />
+
                                 {isSelected && (
                                     <div className="selection-indicator">
                                         {selectionIndex + 1}
