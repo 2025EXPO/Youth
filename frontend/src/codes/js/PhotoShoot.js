@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "../css/PhotoShoot.css";
 
 // ✅ Flask 서버 주소 (EC2 IP)
-const API_BASE_URL = "http://13.208.172.221:5000";
+const API_BASE_URL = "http://56.155.45.183:5000";
 
 const PhotoShoot = ({ onComplete }) => {
     const [countdown, setCountdown] = useState(10); // 카운트다운 (초)

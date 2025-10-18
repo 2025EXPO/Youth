@@ -34,7 +34,7 @@ import FrameShingu from "../../img/logos/FrameShingu.png";
 
 import { getImageUrl } from "../../utils/getImageUrl";
 
-const ec2_url = "http://13.208.172.221:5000";
+const ec2_url = "http://56.155.45.183:5000";
 
 const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
     const [selectedFrame, setSelectedFrame] = useState("frame1");
