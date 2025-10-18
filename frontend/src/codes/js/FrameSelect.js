@@ -185,8 +185,6 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
         }
     };
 
-    // ========================================================================================
-
     return (
         <div className="frameselect-container">
             <div className="frameselect-title">프레임을 선택해 주세요!</div>
