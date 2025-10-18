@@ -12,6 +12,9 @@ from datetime import datetime
 import os
 
 final_bp = Blueprint("final", __name__)
+import traceback
+from datetime import datetime
+from flask import Blueprint, jsonify, request
 
 @final_bp.route("/final", methods=["POST"])
 def final():
@@ -24,12 +27,19 @@ def final():
         date_prefix = datetime.now().strftime("%m%d")
         index = get_next_index(S3_BUCKET, f"final/{date_prefix}_")
         output_filename = f"{date_prefix}_img{index}.png"
-        output_path = combine_photos(photos, frame_key, grayscale, output_filename)
 
+        # 디버깅 로그
+        print("📸 받은 데이터:", photos)
+        print("🎞 frame_key:", frame_key, "grayscale:", grayscale)
+
+        output_path = combine_photos(photos, frame_key, grayscale, output_filename)
         s3_upload(output_path, f"final/{output_filename}", "image/png")
         s3_url = f"{S3_BASE_URL}/final/{output_filename}"
 
         print(f"✅ /final 업로드 완료: {s3_url}")
         return jsonify({"url": s3_url})
+
     except Exception as e:
+        print("❌ /final 처리 중 오류 발생:")
+        traceback.print_exc()  # ✅ 이 한 줄이 핵심
         return jsonify({"error": str(e)}), 500
