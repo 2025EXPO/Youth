@@ -51,7 +51,7 @@ FRAME_POSITIONS = {
 
 for key, val in list(FRAME_POSITIONS.items()):
     if val is None:
-        FRAME_POSITIONS[key] = FRAME_POSITIONS["BlackRoundFrame"]
+        FRAME_POSITIONS[key] = FRAME_POSITIONS["BlackRound"]
 
 
 def combine_photos(photos, frame_key, grayscale, output_filename):
