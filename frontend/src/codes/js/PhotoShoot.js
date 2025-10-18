@@ -2,9 +2,10 @@
 // flask app.py에서 /uploads로 받아 이미지 저장 및 가공
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "../css/PhotoShoot.css";
+import BASE_URL from "../../config";
 
-// ✅ Flask 서버 주소 (EC2 IP)
-const API_BASE_URL = "http://56.155.45.183:5000";
+// Flask 서버 주소 (EC2 IP)
+const API_BASE_URL = BASE_URL;
 
 const PhotoShoot = ({ onComplete }) => {
     const [countdown, setCountdown] = useState(10); // 카운트다운 (초)
@@ -132,7 +133,7 @@ const PhotoShoot = ({ onComplete }) => {
                 }
                 return prev - 1;
             });
-        }, 200); // 여기고치기
+        }, 1000); // 1초 간격
 
         return () => {
             if (timerIdRef.current) clearInterval(timerIdRef.current);

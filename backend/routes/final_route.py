@@ -43,7 +43,7 @@ def final():
 
         # ✅ S3 업로드 시도
         s3_key = f"final/{output_filename}"
-        s3_url = f"{get_s3_base_url()}/final/{output_filename}" #여기
+        s3_url = f"{get_s3_base_url()}/final/{output_filename}"
         try:
             s3_upload(output_path, s3_key, "image/png")
             print(f"✅ S3 업로드 성공: {s3_url}")
