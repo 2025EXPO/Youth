@@ -8,6 +8,19 @@ import os
 from PIL import Image, ImageOps
 from utils.file_utils import FRAME_DIR, FINAL_DIR, UPLOAD_DIR
 
+# 프레임 키와 파일명 매핑
+FRAME_PATHS = {
+    "frame1": "WhiteRoundFrame.png",
+    "frame2": "BlackRoundFrame.png",
+    "frame3": "PartyRoundFrame.png",
+    "frame4": "ZebraRoundFrame.png",
+    "frame5": "ShinguFrame.png",
+    "special1": "StarRoundFrame.png",
+    "special2": "OceanRoundFrame.png",
+    "special3": "ShinguFunnyFrame.png"
+}
+
+
 # 프레임별 4컷 좌표 비율 정의
 FRAME_POSITIONS = {
     "BlackRoundFrame": [
@@ -40,10 +53,10 @@ for key, val in list(FRAME_POSITIONS.items()):
     if val is None:
         FRAME_POSITIONS[key] = FRAME_POSITIONS["BlackRoundFrame"]
 
+
 def combine_photos(photos, frame_key, grayscale, output_filename):
     """
     4컷 프레임 합성 함수
-
     Args:
         photos (list): 업로드된 사진 경로 리스트 (ex. ["/uploads/1018_img1_01.jpg", ...])
         frame_key (str): 프레임 이름 (ex. "ZebraRoundFrame")
@@ -53,7 +66,11 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
     Returns:
         str: 합성 완료된 최종 이미지의 로컬 경로
     """
-    frame_path = os.path.join(FRAME_DIR, f"{frame_key}.png")
+    frame_filename = FRAME_PATHS.get(frame_key)
+    if not frame_filename:
+        raise FileNotFoundError(f"등록되지 않은 프레임 키: {frame_key}")
+    
+    frame_path = os.path.join(FRAME_DIR, frame_filename)
     if not os.path.exists(frame_path):
         raise FileNotFoundError(f"프레임 파일을 찾을 수 없습니다: {frame_path}")
 

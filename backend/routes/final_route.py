@@ -38,7 +38,7 @@ def final():
         output_path = combine_photos(photos, frame_key, grayscale, output_filename)
         print(f"✅ 로컬 합성 완료: {output_path}")
 
-        # ✅S3 업로드
+        # S3 업로드
         try:
             s3_upload(output_path, f"final/{output_filename}", "image/png")
             s3_url = f"{S3_BASE_URL}/final/{output_filename}"
