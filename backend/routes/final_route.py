@@ -1,8 +1,9 @@
 from flask import Blueprint, request, jsonify, current_app
 from utils.image_utils import combine_photos
-from utils.s3_utils import s3_upload, get_next_index
+from utils.s3_utils import s3_upload, get_next_index, get_s3_base_url 
 from datetime import datetime
 import os, traceback
+
 
 final_bp = Blueprint("final", __name__)
 
