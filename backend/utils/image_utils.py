@@ -10,43 +10,43 @@ from utils.file_utils import FRAME_DIR, FINAL_DIR, UPLOAD_DIR
 
 # 프레임 키와 파일명 매핑
 FRAME_PATHS = {
-    "frame1": "WhiteRoundFrame.png",
-    "frame2": "BlackRoundFrame.png",
-    "frame3": "PartyRoundFrame.png",
-    "frame4": "ZebraRoundFrame.png",
-    "frame5": "ShinguFrame.png",
-    "special1": "StarRoundFrame.png",
-    "special2": "OceanRoundFrame.png",
-    "special3": "ShinguFunnyFrame.png"
+    "frame1": "WhiteRound.png",
+    "frame2": "BlackRound.png",
+    "frame3": "PartyRound.png",
+    "frame4": "ZebraRound.png",
+    "frame5": "Shingu.png",
+    "special1": "StarRound.png",
+    "special2": "OceanRound.png",
+    "special3": "ShinguFunny.png"
 }
 
 
 # 프레임별 4컷 좌표 비율 정의
 FRAME_POSITIONS = {
-    "BlackRoundFrame": [
+    "BlackRound": [
         {"x": 23.71 / 592.67, "y": 29.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
         {"x": 23.71 / 592.67, "y": 393.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
         {"x": 23.71 / 592.67, "y": 756.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
         {"x": 23.71 / 592.67, "y": 1120.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
     ],
-    "BlackTextFrame": [
+    "BlackText": [
         {"x": 23.71 / 592.67, "y": 29.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
         {"x": 23.71 / 592.67, "y": 393.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
         {"x": 23.71 / 592.67, "y": 756.63 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
         {"x": 23.71 / 592.67, "y": 1120.13 / 1778, "w": 545.24 / 592.67, "h": 344.73 / 1778},
     ],
     # 나머지 프레임 동일 좌표 등록
-    "OceanRoundFrame": None,
-    "OceanTextFrame": None,
-    "PartyRoundFrame": None,
-    "PartyTextFrame": None,
-    "ShinguFrame": None,
-    "StarRoundFrame": None,
-    "StarTextFrame": None,
-    "WhiteRoundFrame": None,
-    "WhiteTextFrame": None,
-    "ZebraRoundFrame": None,
-    "ZebraTextFrame": None,
+    "OceanRound": None,
+    "OceanText": None,
+    "PartyRound": None,
+    "PartyText": None,
+    "Shingu": None,
+    "StarRound": None,
+    "StarText": None,
+    "WhiteRound": None,
+    "WhiteText": None,
+    "ZebraRound": None,
+    "ZebraText": None,
 }
 
 for key, val in list(FRAME_POSITIONS.items()):
@@ -81,7 +81,7 @@ def combine_photos(photos, frame_key, grayscale, output_filename):
     base = Image.new("RGBA", (frame_w, frame_h), (0, 0, 0, 0))
 
     # 좌표 계산
-    base_positions = FRAME_POSITIONS.get(frame_key, FRAME_POSITIONS["BlackRoundFrame"])
+    base_positions = FRAME_POSITIONS.get(frame_key, FRAME_POSITIONS["BlackRound"])
     
     # 실제 픽셀 좌표로 변환
     positions = [
