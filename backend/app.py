@@ -1,6 +1,8 @@
 # Flask 진입점
 # routes/ 폴더에 있는 각 기능별 /capture, /final, /print, /health 라우트를 Flask에 연결
 
+import os
+
 from flask import Flask, send_from_directory 
 from flask_cors import CORS
 from routes.capture_route import capture_bp
