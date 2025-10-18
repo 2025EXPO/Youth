@@ -134,7 +134,7 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
 
     const handleNext = async () => {
         try {
-            const res = await fetch("http://192.168.200.174:5000/final", {
+            const res = await fetch("http://13.208.215.216:5000/final", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 mode: "cors",
@@ -156,7 +156,7 @@ const FrameSelect = ({ selectedPhotos, onComplete, onBack }) => {
             if (data.url) {
                 try {
                     const printRes = await fetch(
-                        "http://192.168.200.174:5000/print",
+                        "http://13.208.215.216:5000/print",
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
