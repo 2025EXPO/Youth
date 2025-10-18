@@ -5,7 +5,7 @@
 # 인쇄 명령 전송(옵션) + PDF URL 반환
 
 from flask import Blueprint, request, jsonify
-from backend.utils.print_utils import make_print_pdf
+from utils.print_utils import make_print_pdf
 from utils.s3_utils import s3_upload, get_next_index, S3_BASE_URL, S3_BUCKET
 from datetime import datetime
 import os
