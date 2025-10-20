@@ -27,6 +27,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scaleX(-1);
 }
 
 /* 촬영 횟수 영역 */
@@ -40,7 +41,7 @@
 }
 
 .count-label {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-weight: 100;
   font-size: 1.8vw;
   color: #000000;
@@ -50,7 +51,7 @@
 }
 
 .count-number {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-size: 5vw; /* 기존 4vw에서 크기 증가 */
   font-weight: 100; /* 피그마 디자인에 맞춰 thin으로 변경 */
   color: #000000;
@@ -80,7 +81,7 @@
 }
 
 .time-label {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-weight: 100;
   font-size: 1.8vw;
   color: #000000;
@@ -90,7 +91,7 @@
 }
 
 .countdown-number {
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   font-size: 5vw; /* 기존 4vw에서 크기 증가 */
   font-weight: 100; /* 피그마 디자인에 맞춰 thin으로 변경 */
   color: #000000;
@@ -126,20 +127,35 @@
 }
 
 @keyframes flash {
-  0% { background-color: rgba(255, 255, 255, 0); }
-  50% { background-color: rgba(255, 255, 255, 0.9); }
-  100% { background-color: rgba(255, 255, 255, 0); }
+  0% {
+    background-color: rgba(255, 255, 255, 0);
+  }
+  50% {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0);
+  }
 }
 
 @keyframes cameraShutter {
-  0% { transform: scale(0.5); opacity: 0; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* 완료 메시지 */
 .complete-message {
-  font-family: 'Noto Sans', 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans", "Noto Sans KR", sans-serif;
   font-weight: 400;
   font-size: 4vw;
   color: #000000;
@@ -148,8 +164,14 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 터치스크린 최적화 */

@@ -16,11 +16,3 @@ class Config:
     FRAME_DIR = os.path.join(BASE_DIR, "frames")
     FINAL_DIR = os.path.join(BASE_DIR, "final")
     PRINT_DIR = os.path.join(BASE_DIR, "print")
-
-# class DevelopmentConfig(Config):
-#     """로컬 테스트용"""
-#     DEBUG = True
-
-# class ProductionConfig(Config):
-#     """EC2 등 실제 배포용"""
-#     DEBUG = False
