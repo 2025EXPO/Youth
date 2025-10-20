@@ -35,7 +35,7 @@ aws 계정 권한 오류로 s3사용을 못하고 있음
     flask run --host=0.0.0.0 --port=5000 --debug
     ```
 
--   접속 주소: http://127.0.0.1:5000
+- 접속 주소: http://127.0.0.1:5000
 
 ## python 가상환경 실행 명령어
 
@@ -63,39 +63,39 @@ aws 계정 권한 오류로 s3사용을 못하고 있음
 
 **이유**
 
--   EC2는 Flask 서버를 외부에 계속 띄워야해서 비용이 든다.
--   '이미지 조회'의 간단한 기능만 필요하기 때문에 굳이 필요 없음<br>
-    Flask: **이미지 합성 → S3 업로드** 만 하면 됨
--   S3에 업로드된 이미지는 URL로 어디서든 접근 가능.
--   따라서 **EC2 없이도** QR 코드로 이미지 제공이 가능함
+- EC2는 Flask 서버를 외부에 계속 띄워야해서 비용이 든다.
+- '이미지 조회'의 간단한 기능만 필요하기 때문에 굳이 필요 없음<br>
+  Flask: **이미지 합성 → S3 업로드** 만 하면 됨
+- S3에 업로드된 이미지는 URL로 어디서든 접근 가능.
+- 따라서 **EC2 없이도** QR 코드로 이미지 제공이 가능함
 
 ---
 
 ### 2. S3 버킷 생성 및 접근 정책 설정
 
--   **리전:** `ap-northeast-3 (오사카)`
--   **버킷 이름:** `계정이름-s3`_(expo용으로 교수님께서 주신 계정이라 해당 계정 이름으로 시작해야함)_
+- **리전:** `ap-northeast-3 (오사카)`
+- **버킷 이름:** `계정이름-s3`_(expo용으로 교수님께서 주신 계정이라 해당 계정 이름으로 시작해야함)_
 
 #### 설정 내용
 
--   버킷 생성 시 **모든 퍼블릭 액세스 차단 해제**
--   외부 사용자가 QR로 `/final/` 폴더의 이미지를 직접 볼 수 있도록
-    **버킷 정책(JSON)** 을 수동으로 작성하여 적용
+- 버킷 생성 시 **모든 퍼블릭 액세스 차단 해제**
+- 외부 사용자가 QR로 `/final/` 폴더의 이미지를 직접 볼 수 있도록
+  **버킷 정책(JSON)** 을 수동으로 작성하여 적용
 
 #### 적용된 버킷 정책
 
 ```json
 {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "Statement1",
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::버킷이름/final/*" //혹시 몰라 계정명은 가림
-        }
-    ]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Statement1",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::버킷이름/final/*" //혹시 몰라 계정명은 가림
+    }
+  ]
 }
 ```
 
@@ -150,7 +150,7 @@ Access Key / Secret Key 발급이 금지된 환경이므로,
 코드 수정 후 EC2로 직접 덮어쓰기 할 때👇
 
 ```bash
-scp -i "C:\Users\kangd\Documents\GitHub\Youth\expo-2025.pem" -r "C:\Users\kangd\Documents\GitHub\Youth\backend" ec2-user@56.155.45.183:/home/ec2-user/
+scp -i "C:\Users\kangd\Documents\GitHub\Youth\expo-2025.pem" -r "C:\Users\kangd\Documents\GitHub\Youth\backend" ec2-user@15.168.189.180:/home/ec2-user/
 ```
 
 > ⚠️ `scp` 명령은 **로컬(내 PC)** 에서 실행해야 합니다.
