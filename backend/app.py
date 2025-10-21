@@ -41,6 +41,11 @@ def serve_final(filename):
 def serve_print(filename):
     return send_from_directory(app.config["PRINT_DIR"], filename)
 
+@app.route("/")
+def home():
+    # 서버가 정상 작동 중임을 간단히 알리는 텍스트를 반환합니다.
+    return "Youth Backend Server is Running."
+
 if __name__ == "__main__":
     print("🚀 Flask 서버 실행 중")
     print(f"🌐 BASE_URL: {Config.BASE_URL}")
