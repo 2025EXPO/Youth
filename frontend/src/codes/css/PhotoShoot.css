@@ -13,10 +13,10 @@
 /* 카메라 화면 영역 */
 .camera-screen {
   position: absolute;
-  left: 40%;
+  left: 43%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 50vw;
+  width: 65vw;
   aspect-ratio: 16 / 10;
   background-color: #d9d9d9;
   border-radius: 8px;
