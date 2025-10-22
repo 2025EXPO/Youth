@@ -45,7 +45,7 @@ def get_next_index(bucket, prefix):
         print(f"⚠️ S3 접근 실패: {e}")
         return 1
 
-
+# 이전 코드
 # def get_next_index(bucket, prefix):
 #     """S3에 저장된 파일 수 기반으로 다음 index 계산"""
 #     s3 = boto3.client("s3", region_name=current_app.config["S3_REGION"])
