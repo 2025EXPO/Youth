@@ -134,7 +134,7 @@ const PhotoShoot = ({ onComplete }) => {
         }
         return prev - 1;
       });
-    }, 1000); // 1초 간격
+    }, 300); // 1초 간격
 
     return () => {
       if (timerIdRef.current) clearInterval(timerIdRef.current);
@@ -203,9 +203,8 @@ const PhotoShoot = ({ onComplete }) => {
         </div>
       )}
 
-
       {/* 개발용: 임시 다음 페이지 버튼 */}
-{/*      <div className="emergency-controls">
+      {/*      <div className="emergency-controls">
         <button
           className="skip-button"
           onClick={handleSkipToNext}
