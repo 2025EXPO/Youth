@@ -134,7 +134,7 @@ const PhotoShoot = ({ onComplete }) => {
         }
         return prev - 1;
       });
-    }, 300); // 1초 간격
+    }, 1000); // 1초 간격
 
     return () => {
       if (timerIdRef.current) clearInterval(timerIdRef.current);
