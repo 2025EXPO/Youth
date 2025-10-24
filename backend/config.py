@@ -2,7 +2,7 @@ import os
 
 class Config:
     # 서버 기본
-    current_ip="13.208.209.23"
+    current_ip="15.168.239.162"
     BASE_URL = f"http://{current_ip}:5000"
     DEBUG = True
 
