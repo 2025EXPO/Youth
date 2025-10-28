@@ -204,7 +204,7 @@ const PhotoShoot = ({ onComplete }) => {
       )}
 
       {/* 개발용: 임시 다음 페이지 버튼 */}
-      <div className="emergency-controls">
+      {/*      <div className="emergency-controls">
         <button
           className="skip-button"
           onClick={handleSkipToNext}
@@ -223,8 +223,8 @@ const PhotoShoot = ({ onComplete }) => {
           }}
         >
           다음 페이지로 이동 (개발용)
-        </button>
-      </div>
+        </button> 
+      </div>*/}
     </div>
   );
 };

@@ -43,7 +43,7 @@ def serve_print(filename):
 
 @app.route("/")
 def home():
-    # 서버가 정상 작동 중임을 간단히 알리는 텍스트를 반환합니다.
+    # 서버가 정상 작동 중임을 간단히 알리는 텍스트를 반환
     return "Youth Backend Server is Running."
 
 if __name__ == "__main__":
